@@ -28,7 +28,8 @@ class amfConnectionService
      *  statusCode will be set to 0 (SUCCESS) if accepted.
      *  statusCode will be set to 1 (GENERAL_ERROR) if declined.
      */
-    public function doLogin($loginVo) {
+    public function doLogin($loginVo)
+	{
         $response = new AmfResponse();
         if(Panfu::loginUserWithVo($loginVo)) {
             $userData = Panfu::getUserDataById($_SESSION['id']);
@@ -59,7 +60,8 @@ class amfConnectionService
      *  statusCode will be set to 0 (SUCCESS) if accepted.
      *  statusCode will be set to 1 (GENERAL_ERROR) if declined.
      */
-    public function doLoginSession($sessionTicket) {
+    public function doLoginSession($sessionTicket)
+	{
         $response = new AmfResponse();
         $response->statusCode = 7;
         return $response;
@@ -75,7 +77,8 @@ class amfConnectionService
      *  statusCode will be set to 0 (SUCCESS) if accepted.
      *  statusCode will be set to 1 (GENERAL_ERROR) if declined.
      */
-    public function doRegister($registerVO) {
+    public function doRegister($registerVO)
+	{
         $response = new AmfResponse();
         if(Panfu::registerUserWithVo($registerVO)) {
             $response->statusCode = 0;
