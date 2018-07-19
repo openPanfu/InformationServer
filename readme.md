@@ -1,23 +1,24 @@
-##OpenPanfu InformationServer
+# OpenPanfu InformationServer
 
-###About
+### About
 AMF stands for Action Message Format, it's used for remoting between a Java and apache flex program.
 
 As it turns out, Panfu uses Flex remoting, however implementing it in Java (which requires tomcat) is not a good option.
 
 We went for Amfphp because it's pretty easy to setup for yourself. (Amfphp license can be found in license.txt)
 
-###Installation
+### Installation
+
 For installation you'll need a MYSQL server.
 
-####Gateway setup
+#### Gateway setup
 Alter /Plugins/Database/Database.php to match your MYSQL setup.
 
 (optionally) add new words to the wordfilter in /Plugins/Panfu/wordfilter.txt.
 
 Run the php localserver with `php -S 0.0.0.0:9090` or use apache or nginx.
 
-####Client setup
+#### Client setup
 
 Using the official panfu client is easy as pie.
 
