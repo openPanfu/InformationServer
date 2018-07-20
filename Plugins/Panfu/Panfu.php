@@ -83,7 +83,7 @@ class Panfu
             $gameServers[$i]->name = $gs['name'];
             $gameServers[$i]->url = $gs['url'];
             $gameServers[$i]->port = $gs['port'];
-            $gameServers[$i]->playercount = $gs['playercount'];
+            $gameServers[$i]->playercount = $gs['playerCount'];
             $i++;
         }
         return $gameServers;
