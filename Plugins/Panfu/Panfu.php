@@ -140,7 +140,7 @@ class Panfu
                     $currentTime = time();
                     $insert->bindParam(":signupDate", $currentTime);
                     $result = $insert->execute();
-                    return ($result === 1);
+                    return true;
                 }
                 return false;
             }
