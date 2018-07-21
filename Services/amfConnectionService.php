@@ -32,6 +32,9 @@ class amfConnectionService
 	{
         $response = new AmfResponse();
         if(Panfu::loginUserWithVo($loginVo)) {
+            if(!Panfu::hasItem(1001)) {
+                Panfu::addItemToUser(1001, true);
+            }
             $userData = Panfu::getUserDataById($_SESSION['id']);
             $response->statusCode = 0;
             $response->valueObject = new LoginResultVO();

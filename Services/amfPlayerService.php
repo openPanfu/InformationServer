@@ -81,10 +81,58 @@ class amfPlayerService
     public function purchaseItem($itemId, $itemHash)
     {
         $response = new AmfResponse();
-        $response->statusCode = 6;
+        if(Panfu::isLoggedIn()) {
+            if(Panfu::itemExists($itemId)) {
+                $itemData = Panfu::getItem($itemId);
+                if(Panfu::canAfford($itemData['price'])) {
+                    Panfu::deductCoins($itemData['price']);
+                    Panfu::addItemToUser($itemId);
+                    $response->message = "Item added!";
+                    $response->statusCode = 0;
+                    $itemVO = Panfu::getItemVo($itemId);
+                    $response->valueObject =  $itemVO;
+                } else {
+                    $response->message = "Not enough coins.";
+                    $response->statusCode = 6;
+                }
+            } else {
+                $response->message = "Item doesn't exist.";
+                $response->statusCode = 1;
+            }
+        } else {
+            $response->message = "Not logged in";
+            $response->statusCode = 1;
+        }
         return $response;
     }
 
+    /**
+     * Update the inventory of a user
+     *
+     * @param ItemVO[] $activeInventory
+     * @param ItemVO[] $inactiveInventory
+     * @author Altro50 <altro50@msn.com>
+     * @return AmfResponse
+     */
+    public function updateItems($activeInventory, $inactiveInventory)
+    {
+        $response = new AmfResponse();
+        $pdo = Database::getPDO();
+        foreach($activeInventory as $itemVO) {
+            $update = $pdo->prepare("UPDATE inventory SET active = 1 WHERE playerId = :playerId AND itemId = :itemId");
+            $update->bindParam(":playerId", $_SESSION['id'], PDO::PARAM_INT);
+            $update->bindParam(":itemId", $itemVO->id);
+            $update->execute();
+        }
+        foreach($inactiveInventory as $itemVO) {
+            $update = $pdo->prepare("UPDATE inventory SET active = 0 WHERE playerId = :playerId AND itemId = :itemId");
+            $update->bindParam(":playerId", $_SESSION['id'], PDO::PARAM_INT);
+            $update->bindParam(":itemId", $itemVO->id);
+            $update->execute();
+        }
+        $response->valueObject = Panfu::getPlayerInfoForId($_SESSION['id']);
+        return $response;
+    }
     /**
      * Delete a item
      *
@@ -94,13 +142,16 @@ class amfPlayerService
      */
     public function removeItems($itemArray)
     {
+        // TODO: implement, this is a placeholder so that the client-side inventory isn't overwritten.
         $response = new AmfResponse();
         $response->valueObject = new InventoryVO();
+        $response->valueObject->activeItems = Panfu::getInventory($_SESSION['id'], true);
+        $response->valueObject->inactiveItems = Panfu::getInventory($_SESSION['id'], false);
         return $response;
     }
 
     /**
-     * Delete a item
+     * Get PlayerInfoVOs for players
      *
      * @param int[] $players Player ids
      * @param Boolean $detailed Unused

@@ -51,6 +51,8 @@ class Panfu
             $playerInfo->isTourFinished = true; // TODO: implement tour
             $playerInfo->membershipStatus = $userData['goldpanda'];
             $playerInfo->socialLevel = 1;
+            $playerInfo->activeInventory = Panfu::getInventory($userData['id'], true);
+            $playerInfo->inactiveInventory = Panfu::getInventory($userData['id'], false);
 
             // Let's calculate the days since register.
             $now = time();
@@ -332,6 +334,13 @@ class Panfu
         return $state;
     }
 
+    /**
+     * Checks if a state exists
+     * @author Altro50 <altro50@msn.com>
+     * @param int $category
+     * @param int $name
+     * @return Boolean
+     */
     public static function stateExists($category, $name)
     {
         $pdo = Database::getPDO();
@@ -341,6 +350,159 @@ class Panfu
         $statement->bindParam(":name", $name, PDO::PARAM_INT);
         $statement->execute();
         return ($statement->rowCount() > 0);
+    }
+
+    /**
+     * Checks if the current user can afford something.
+     * @author Altro50 <altro50@msn.com>
+     * @param int $price
+     * @return boolean
+     */
+    public static function canAfford($price)
+    {
+        $currentUser = Panfu::getUserDataById($_SESSION['id']);
+        if($currentUser['coins'] > $price) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Deducts an certain amount coins from the currently logged in user.
+     * @author Altro50 <altro50@msn.com>
+     * @param int $coins
+     * @return void
+     */
+    public static function deductCoins($coins)
+    {
+        if(Panfu::canAfford($coins)) {
+            $pdo = Database::getPDO();
+            $update = $pdo->prepare("UPDATE users SET coins = coins - :toDeduct WHERE id = :userId");
+            $update->bindParam(":toDeduct", $coins);
+            $update->bindParam(":userId", $_SESSION['id']);
+            $update->execute();
+        }
+    }
+
+    /**
+     * Adds item to a users inventory.
+     * @author Altro50 <altro50@msn.com>
+     * @param int $itemId
+     * @param boolean $active
+     * @return void
+     */
+    public static function addItemToUser($itemId, $active = false)
+    {
+        $pdo = Database::getPDO();
+        $insert = $pdo->prepare("INSERT INTO inventory (playerId, itemId, active, bought) VALUE (:userId, :itemId, :active, true)");
+        $insert->bindParam(":userId", $_SESSION['id'], PDO::PARAM_INT);
+        $insert->bindParam(":itemId", $itemId, PDO::PARAM_INT);
+        $insert->bindParam(":active", $active, PDO::PARAM_INT);
+        $insert->execute();
+    }
+
+    /**
+     * Gets the item row from the database
+     * @author Altro50 <altro50@msn.com>
+     * @param int $itemId
+     * @return array the row from the database
+     */
+    public static function getItem($itemId)
+    {
+        $pdo = Database::getPDO();
+        $itemStatement = $pdo->prepare("SELECT * FROM items WHERE id = :id");
+        $itemStatement->bindParam(":id", $itemId, PDO::PARAM_INT);
+        $itemStatement->execute();
+        $itemData = $itemStatement->fetch(PDO::FETCH_ASSOC);
+        if($itemData["type"] < 10) {
+            $itemData["type"] = "0" . (string)$itemData["type"];
+        }
+        return $itemData;
+    }
+
+    /**
+     * Gets the item from the database as a itemVo
+     * @author Altro50 <altro50@msn.com>
+     * @param int $itemId
+     * @return ItemVO
+     */
+    public static function getItemVo($itemId)
+    {
+        require_once AMFPHP_ROOTPATH . "/Services/Vo/ItemVO.php";
+        $response = new ItemVO();
+        $item = Panfu::getItem($itemId);
+        $response->id = $item['id'];
+        $response->name = $item['name'];
+        $response->type = $item['type'];
+        $response->price = $item['price'];
+        $response->zettSort = $item['z'];
+        $response->premium = $item['premium'];
+        $response->bought = true;
+        return $response;
+    }
+
+    /**
+     * Checks if a item id exists
+     * @author Altro50 <altro50@msn.com>
+     * @param Int $itemId
+     * @return boolean
+     */
+    public static function itemExists($itemId)
+    {
+        $pdo = Database::getPDO();
+        $itemStatement = $pdo->prepare("SELECT * FROM items WHERE id = :id");
+        $itemStatement->bindParam(":id", $itemId, PDO::PARAM_INT);
+        $itemStatement->execute();
+        if ($itemStatement->rowCount() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the current user has a certain item.
+     * @author Altro50 <altro50@msn.com>
+     * @param Int $itemId
+     * @return boolean
+     */
+    public static function hasItem($itemId)
+    {
+        $pdo = Database::getPDO();
+        $itemStatement = $pdo->prepare("SELECT id FROM inventory WHERE playerId = :userId AND itemId = :itemId");
+        $itemStatement->bindParam(":userId", $_SESSION['id'], PDO::PARAM_INT);
+        $itemStatement->bindParam(":itemId", $itemId, PDO::PARAM_INT);
+        $itemStatement->execute();
+        if ($itemStatement->rowCount() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checks if the current user has a certain item.
+     * @author Altro50 <altro50@msn.com>
+     * @param Int $userId
+     * @param Boolean $active
+     * @return ItemVO[]
+     */
+    public static function getInventory($userId, $active = false)
+    {
+        $pdo = Database::getPDO();
+        $items = array();
+        $i = 0;
+        $statement = $pdo->prepare("SELECT * FROM inventory WHERE playerId = :id AND active = :active");
+        $statement->bindParam(":id", $userId, PDO::PARAM_INT);
+        $statement->bindParam(":active", $active, PDO::PARAM_INT);
+
+        $statement->execute();
+        if($statement->rowCount() > 0) {
+            foreach ($statement as $inventoryEntry) {
+                $items[$i] = Panfu::getItemVo($inventoryEntry['itemId']);
+                $items[$i]->active = $inventoryEntry['active'];
+                $i++;
+            }
+        }
+        return $items;
     }
 
     /**
