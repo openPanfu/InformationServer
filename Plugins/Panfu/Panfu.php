@@ -281,13 +281,13 @@ class Panfu
         $i = 0;
         if($statement->rowCount() > 0) {
             foreach($statement as $state) {
-                if(in_array($state['category'], $states)) {
+                if(in_array($state['category'], $stateIds)) {
                     $states[$i] = new StateVO();
                     $states[$i]->playerId = $_SESSION['id'];
                     $states[$i]->cathegoryId = $state['category'];
                     $states[$i]->nameId = $state['name'];
                     $states[$i]->stateValue = $state['value'];
-                    $states[$i]->lastChanged = $state['lastChanged'] * 1000000;
+                    $states[$i]->lastChanged = $state['lastChanged'] * 100000000;
                     $i++;
                 }
             }
@@ -330,7 +330,7 @@ class Panfu
         $state->nameId = $name;
         $state->stateValue = $value;
         $state->cathegoryId = $category;
-        $state->lastChanged = $timestamp * 1000000;
+        $state->lastChanged = $timestamp * 100000000;
         return $state;
     }
 
