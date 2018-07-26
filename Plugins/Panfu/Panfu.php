@@ -365,7 +365,22 @@ class Panfu
             return true;
         }
         return false;
-    }
+    }    
+    
+    /**
+    * Updates the user's coin count.
+    * @author Altro50 <altro50@msn.com>
+    * @param int $coins
+    * @return void
+    */
+   public static function updateCoins($coins)
+   {
+        $pdo = Database::getPDO();
+        $update = $pdo->prepare("UPDATE users SET coins = :coins WHERE id = :userId");
+        $update->bindParam(":coins", $coins);
+        $update->bindParam(":userId", $_SESSION['id']);
+        $update->execute();
+   }
 
     /**
      * Deducts an certain amount coins from the currently logged in user.

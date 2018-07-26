@@ -190,4 +190,20 @@ class amfPlayerService
         }
         return $response;
     }
+
+    /**
+     * Sets the user's coins after finishing a minigame.
+     *
+     * @param int $score the coins the user has earned
+     * @author Altro50 <altro50@msn.com>
+     * @return AmfResponse
+     */
+    public function updateScore($score)
+    {
+        $response = new AmfResponse();
+        if(Panfu::isLoggedIn()) {
+            Panfu::updateCoins($score);
+        }
+        return $response;
+    }
 }
