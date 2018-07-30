@@ -42,7 +42,7 @@ class Panfu
             $userData = Panfu::getUserDataById($userId);
             $playerInfo = new PlayerInfoVO();
             $playerInfo->id = $userData['id'];
-            $playerInfo->name = $userData['username'];
+            $playerInfo->name = $userData['name'];
             $playerInfo->coins = $userData['coins'];
             $playerInfo->isSheriff = $userData['sheriff'];
             $playerInfo->isPremium = (boolean)($userData['goldpanda'] > 0);
@@ -127,15 +127,15 @@ class Panfu
     {
         if(isset($registerVO->_explicitType)) {
             if ($registerVO->_explicitType == "com.pandaland.mvc.model.vo.RegisterVO" && $registerVO->pwParents === "..7654..") {
-                $username = (string)$registerVO->name;
+                $name = (string)$registerVO->name;
                 $password = (string)password_hash($registerVO->pw, PASSWORD_BCRYPT);
                 $email = (string)$registerVO->emailParents;
                 $sex = (int)($registerVO->sex == "girl");
 
-                if(Panfu::usernameAcceptable($username) && Panfu::usernameNotTaken($username)) {
+                if(Panfu::usernameAcceptable($name) && Panfu::usernameNotTaken($name)) {
                     $pdo = Database::getPDO();
-                    $insert = $pdo->prepare("INSERT INTO users (username, password, email, sex, signupDate) VALUES (:username, :password, :email,:sex, :signupDate)");
-                    $insert->bindParam(":username", $username);
+                    $insert = $pdo->prepare("INSERT INTO users (name, password, email, sex, signupDate) VALUES (:name, :password, :email,:sex, :signupDate)");
+                    $insert->bindParam(":name", $name);
                     $insert->bindParam(":password", $password);
                     $insert->bindParam(":email", $email);
                     $insert->bindParam(":sex", $sex);
@@ -160,8 +160,8 @@ class Panfu
     public static function usernameNotTaken($username)
     {
         $pdo = Database::getPDO();
-        $checkStmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
-        $checkStmt->bindParam(":username", $username, PDO::PARAM_INT);
+        $checkStmt = $pdo->prepare("SELECT * FROM users WHERE name = :name");
+        $checkStmt->bindParam(":name", $username, PDO::PARAM_INT);
         $checkStmt->execute();
         if ($checkStmt->rowCount() == 0) {
             return true;
@@ -254,8 +254,8 @@ class Panfu
     {
         if(!Panfu::usernameNotTaken($username)) {
             $pdo = Database::getPDO();
-            $userStatement = $pdo->prepare("SELECT * FROM users WHERE username = :username");
-            $userStatement->bindParam(":username", $username, PDO::PARAM_INT);
+            $userStatement = $pdo->prepare("SELECT * FROM users WHERE name = :name");
+            $userStatement->bindParam(":name", name, PDO::PARAM_INT);
             $userStatement->execute();
             $userData = $userStatement->fetch(PDO::FETCH_ASSOC);
             return $userData;
