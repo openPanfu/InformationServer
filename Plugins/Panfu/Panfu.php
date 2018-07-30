@@ -255,7 +255,7 @@ class Panfu
         if(!Panfu::usernameNotTaken($username)) {
             $pdo = Database::getPDO();
             $userStatement = $pdo->prepare("SELECT * FROM users WHERE name = :name");
-            $userStatement->bindParam(":name", name, PDO::PARAM_INT);
+            $userStatement->bindParam(":name", $username, PDO::PARAM_INT);
             $userStatement->execute();
             $userData = $userStatement->fetch(PDO::FETCH_ASSOC);
             return $userData;
