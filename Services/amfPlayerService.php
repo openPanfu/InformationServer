@@ -119,13 +119,13 @@ class amfPlayerService
         $response = new AmfResponse();
         $pdo = Database::getPDO();
         foreach($activeInventory as $itemVO) {
-            $update = $pdo->prepare("UPDATE inventory SET active = 1 WHERE playerId = :playerId AND itemId = :itemId");
+            $update = $pdo->prepare("UPDATE inventories SET active = 1 WHERE user_id = :playerId AND item_id = :itemId");
             $update->bindParam(":playerId", $_SESSION['id'], PDO::PARAM_INT);
             $update->bindParam(":itemId", $itemVO->id);
             $update->execute();
         }
         foreach($inactiveInventory as $itemVO) {
-            $update = $pdo->prepare("UPDATE inventory SET active = 0 WHERE playerId = :playerId AND itemId = :itemId");
+            $update = $pdo->prepare("UPDATE inventories SET active = 0 WHERE user_id = :playerId AND item_id = :itemId");
             $update->bindParam(":playerId", $_SESSION['id'], PDO::PARAM_INT);
             $update->bindParam(":itemId", $itemVO->id);
             $update->execute();

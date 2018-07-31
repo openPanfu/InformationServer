@@ -22,7 +22,7 @@ class Panfu
     {
         $sessionId = rand(1000, 9000);
         $pdo = Database::getPDO();
-        $stmt = $pdo->prepare("UPDATE users SET ticketId = :ticket WHERE id = :id");
+        $stmt = $pdo->prepare("UPDATE users SET ticket_id = :ticket WHERE id = :id");
         $stmt->bindParam(':ticket', $sessionId);
         $stmt->bindParam(':id', $_SESSION["id"]);
         $stmt->execute();
@@ -56,7 +56,7 @@ class Panfu
 
             // Let's calculate the days since register.
             $now = time();
-            $difference = $now - $userData['signupDate'];
+            $difference = $now - strtotime($userData['created_at']);
             $playerInfo->daysOnPanfu = round($difference / (60 * 60 * 24));
             return $playerInfo;
         } catch(Exception $e) {
@@ -85,7 +85,7 @@ class Panfu
             $gameServers[$i]->name = $gs['name'];
             $gameServers[$i]->url = $gs['url'];
             $gameServers[$i]->port = $gs['port'];
-            $gameServers[$i]->playercount = $gs['playerCount'];
+            $gameServers[$i]->playercount = $gs['player_count'];
             $i++;
         }
         return $gameServers;
@@ -134,13 +134,11 @@ class Panfu
 
                 if(Panfu::usernameAcceptable($name) && Panfu::usernameNotTaken($name)) {
                     $pdo = Database::getPDO();
-                    $insert = $pdo->prepare("INSERT INTO users (name, password, email, sex, signupDate) VALUES (:name, :password, :email,:sex, :signupDate)");
+                    $insert = $pdo->prepare("INSERT INTO users (name, password, email, sex) VALUES (:name, :password, :email,:sex)");
                     $insert->bindParam(":name", $name);
                     $insert->bindParam(":password", $password);
                     $insert->bindParam(":email", $email);
                     $insert->bindParam(":sex", $sex);
-                    $currentTime = time();
-                    $insert->bindParam(":signupDate", $currentTime);
                     $result = $insert->execute();
                     return true;
                 }
@@ -275,7 +273,7 @@ class Panfu
         require_once AMFPHP_ROOTPATH . "/Services/Vo/StateVO.php";
         $states = array();
         $pdo = Database::getPDO();
-        $statement = $pdo->prepare("SELECT * FROM states WHERE playerId = :id");
+        $statement = $pdo->prepare("SELECT * FROM states WHERE user_id = :id");
         $statement->bindParam(":id", $_SESSION['id']);
         $statement->execute();
         $i = 0;
@@ -287,7 +285,7 @@ class Panfu
                     $states[$i]->cathegoryId = $state['category'];
                     $states[$i]->nameId = $state['name'];
                     $states[$i]->stateValue = $state['value'];
-                    $states[$i]->lastChanged = $state['lastChanged'] * 100000000;
+                    $states[$i]->lastChanged = $state['last_changed'] * 100000000;
                     $i++;
                 }
             }
@@ -309,7 +307,7 @@ class Panfu
         $pdo = Database::getPDO();
         $timestamp = round(microtime(true));
         if(Panfu::stateExists($category, $name)) {
-            $update = $pdo->prepare("UPDATE states SET value = :value, lastChanged = :lastChanged WHERE playerId = :playerId AND category = :category AND name = :name");
+            $update = $pdo->prepare("UPDATE states SET value = :value, last_changed = :lastChanged WHERE user_id = :playerId AND category = :category AND name = :name");
             $update->bindParam(":value", $value);
             $update->bindParam(":lastChanged", $timestamp);
             $update->bindParam(":playerId", $_SESSION["id"]);
@@ -317,7 +315,7 @@ class Panfu
             $update->bindParam(":name", $name);
             $update->execute();
         } else {
-            $insert = $pdo->prepare("INSERT INTO states (value,lastChanged,playerId,category,name) VALUES (:value, :lastChanged, :playerId, :category, :name)");
+            $insert = $pdo->prepare("INSERT INTO states (value,last_changed,user_id,category,name) VALUES (:value, :lastChanged, :playerId, :category, :name)");
             $insert->bindParam(":value", $value);
             $insert->bindParam(":lastChanged", $timestamp);
             $insert->bindParam(":playerId", $_SESSION["id"]);
@@ -344,7 +342,7 @@ class Panfu
     public static function stateExists($category, $name)
     {
         $pdo = Database::getPDO();
-        $statement = $pdo->prepare("SELECT * FROM states WHERE playerId = :id AND category = :category AND name = :name");
+        $statement = $pdo->prepare("SELECT * FROM states WHERE user_id = :id AND category = :category AND name = :name");
         $statement->bindParam(":id", $_SESSION['id'], PDO::PARAM_INT);
         $statement->bindParam(":category", $category, PDO::PARAM_INT);
         $statement->bindParam(":name", $name, PDO::PARAM_INT);
@@ -409,7 +407,7 @@ class Panfu
     public static function addItemToUser($itemId, $active = false)
     {
         $pdo = Database::getPDO();
-        $insert = $pdo->prepare("INSERT INTO inventory (playerId, itemId, active, bought) VALUE (:userId, :itemId, :active, true)");
+        $insert = $pdo->prepare("INSERT INTO inventories (user_id, item_id, active, bought) VALUE (:userId, :itemId, :active, true)");
         $insert->bindParam(":userId", $_SESSION['id'], PDO::PARAM_INT);
         $insert->bindParam(":itemId", $itemId, PDO::PARAM_INT);
         $insert->bindParam(":active", $active, PDO::PARAM_INT);
@@ -483,7 +481,7 @@ class Panfu
     public static function hasItem($itemId)
     {
         $pdo = Database::getPDO();
-        $itemStatement = $pdo->prepare("SELECT id FROM inventory WHERE playerId = :userId AND itemId = :itemId");
+        $itemStatement = $pdo->prepare("SELECT id FROM inventories WHERE user_id = :userId AND item_id = :itemId");
         $itemStatement->bindParam(":userId", $_SESSION['id'], PDO::PARAM_INT);
         $itemStatement->bindParam(":itemId", $itemId, PDO::PARAM_INT);
         $itemStatement->execute();
@@ -505,14 +503,14 @@ class Panfu
         $pdo = Database::getPDO();
         $items = array();
         $i = 0;
-        $statement = $pdo->prepare("SELECT * FROM inventory WHERE playerId = :id AND active = :active");
+        $statement = $pdo->prepare("SELECT * FROM inventories WHERE user_id = :id AND active = :active");
         $statement->bindParam(":id", $userId, PDO::PARAM_INT);
         $statement->bindParam(":active", $active, PDO::PARAM_INT);
 
         $statement->execute();
         if($statement->rowCount() > 0) {
             foreach ($statement as $inventoryEntry) {
-                $items[$i] = Panfu::getItemVo($inventoryEntry['itemId']);
+                $items[$i] = Panfu::getItemVo($inventoryEntry['item_id']);
                 $items[$i]->active = $inventoryEntry['active'];
                 $i++;
             }
