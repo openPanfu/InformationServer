@@ -51,6 +51,7 @@ class Panfu
             $playerInfo->isTourFinished = true; // TODO: implement tour
             $playerInfo->membershipStatus = $userData['goldpanda'];
             $playerInfo->socialLevel = $userData['social_level'];
+            $playerInfo->socialScore = $userData['social_score'];
             $playerInfo->activeInventory = Panfu::getInventory($userData['id'], true);
             $playerInfo->inactiveInventory = Panfu::getInventory($userData['id'], false);
 
