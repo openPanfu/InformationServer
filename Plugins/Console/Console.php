@@ -7,6 +7,8 @@
  * @author Altro50 <altro50@msn.com>
  */
 
+error_reporting(E_ERROR | E_PARSE);
+
 Class Console
 {
     public static $enabled = true;
@@ -21,7 +23,7 @@ Class Console
                     } else {
                         $output = (string) $arg;
                     }
-                    file_put_contents('php://stdout', "\033[0m\033[34m\e[1m[CONSOLE] " . $output . "\033[0m" . PHP_EOL);
+					file_put_contents('php://stdout', "\033[0m\033[34m\e[1m[CONSOLE] " . $output . "\033[0m" . PHP_EOL);
                 }
             }
         }
