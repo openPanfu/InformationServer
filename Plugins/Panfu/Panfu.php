@@ -50,7 +50,7 @@ class Panfu
             $playerInfo->helperStatus = false; // obsolete, if the account is older than 2012, this will be set to false anyways.
             $playerInfo->isTourFinished = true; // TODO: implement tour
             $playerInfo->membershipStatus = $userData['goldpanda'];
-            $playerInfo->socialLevel = 1;
+            $playerInfo->socialLevel = $userData['social_level'];
             $playerInfo->activeInventory = Panfu::getInventory($userData['id'], true);
             $playerInfo->inactiveInventory = Panfu::getInventory($userData['id'], false);
 
