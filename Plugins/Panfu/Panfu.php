@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of openPanfu, a project that imitates the Flex remoting
  * and gameservers of Panfu.
@@ -13,6 +14,39 @@ class Panfu
 {
     private static $wordFilter = [];
 
+    /**
+     * Sets and returns a session ticket for the user.
+     * @author Altro50 <altro50@msn.com>
+     * @return SecurityChatItemVO[]
+     */
+    public static function generateSafeChat()
+    {
+        require_once AMFPHP_ROOTPATH . '/Services/Vo/SecurityChatItemVO.php';
+        $data = json_decode(file_get_contents(__DIR__ . '/safechatall.json'));
+        $snippets = array();
+        $i = 0;
+        foreach($data as $entry) {
+            $snippets[$i] = Self::traverseChildren($entry);
+            $i++;
+        }
+        return $snippets;
+    }
+
+    /**
+     * Returns children
+     * @author Altro50 <altro50@msn.com>
+     * @return SecurityChatItemVO[]
+     */
+    private static function traverseChildren($safeChatEntry)
+    {
+        $valueObject = new SecurityChatItemVO();
+        $valueObject->label = $safeChatEntry->label;
+        foreach($safeChatEntry->children as $child) {
+            array_push($valueObject->children, Self::traverseChildren($child));
+        }
+        return $valueObject;
+    }
+    
     /**
      * Sets and returns a session ticket for the user.
      * @author Altro50 <altro50@msn.com>

@@ -10,7 +10,7 @@ class SecurityChatItemVO
     /**
      * @type Array
      */
-    public $children = null;
+    public $children = [];
 
     /**
      * @type String

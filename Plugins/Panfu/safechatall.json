@@ -1,0 +1,58 @@
+[
+    {
+        "label":"Hello!",
+        "children":[
+            {
+                "label":"Hi!"
+            },
+            {
+                "label":"Hey you!"
+            },
+            {
+                "label":"Hey y'all!"
+            },
+            {
+                "label":"Good",
+                "children":[
+                    
+                    {
+                        "label":"Good Night!"
+                    },
+                    {
+                        "label":"Good Evening!"
+                    },
+                    {
+                        "label":"Good day!"
+                    },
+                    {
+                        "label":"Good morning!"
+                    }
+                    
+                ]
+            },
+            {
+                "label":"Welcome!"
+            },
+            {
+                "label":"Welcome to my treehouse!"
+            }
+        ]
+    },
+    {
+        "label":"Bye",
+        "children":[
+            {
+                "label":"Goodbye!"
+            },
+            {
+                "label":"Cya!"
+            },
+            {
+                "label":"Byebye!"
+            },
+            {
+                "label":"See you tomorrow!"
+            }
+        ]
+    }
+]
