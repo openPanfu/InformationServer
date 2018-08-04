@@ -9,7 +9,7 @@
  */
 
 require_once 'Vo/AmfResponse.php';
-require_once 'Vo/listVO.php';
+require_once 'Vo/ListVO.php';
 require_once 'Vo/StateVO.php';
 require_once 'Vo/InventoryVO.php';
 
