@@ -165,8 +165,8 @@ class amfPlayerService
             $list = new ListVO();
             $i = 0;
             foreach ($players as $player) {
-
                 $list->list[$i] = Panfu::getPlayerInfoForId($player);
+                $i++;
             }
             $response->valueObject = $list;
         } else {
