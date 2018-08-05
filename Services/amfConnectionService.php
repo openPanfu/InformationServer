@@ -18,7 +18,7 @@ require_once 'Vo/PartnerTrackingVO.php';
 class amfConnectionService
 {
     /**
-     * Login a user using a loginVO
+     * Login an user using a loginVO
      *
      * @param loginVO $loginVo
      * @author Altro50 <altro50@msn.com>
@@ -53,7 +53,7 @@ class amfConnectionService
     }
 
     /**
-     * Login a user using a session ticket
+     * Login an user using a session ticket
      *
      * @param String $sessionTicket
      * @author Altro50 <altro50@msn.com>
