@@ -70,7 +70,7 @@ class amfPlayerService
         $response = new AmfResponse();
         $pdo = Database::getPDO();
         $update = $pdo->prepare("UPDATE users SET tour_finished = :status WHERE id = :playerId");
-        $update->bindParam(":status", $status, PDO::PARAM_BOOL);
+        $update->bindParam(":status", $status, PDO::PARAM_INT);
         $update->bindParam(":playerId", $_SESSION['id'], PDO::PARAM_INT);
         $update->execute();
         $response->statusCode = 0;
