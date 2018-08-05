@@ -110,7 +110,7 @@ class Panfu
         $pdo = Database::getPDO();
         $stmt = $pdo->prepare("SELECT * FROM gameservers");
         $stmt->execute();
-        $servers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $servers = $stmt->fetchAll();
 
         $gameServers = array();
         $i = 0;
@@ -248,7 +248,7 @@ class Panfu
             $stmt = $pdo->prepare("SELECT id FROM users WHERE id = :id");
             $stmt->bindParam(':id', $_SESSION["id"]);
             $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $row = $stmt->fetch();
             if ($row) {
                 return true;
             } else {
@@ -273,7 +273,7 @@ class Panfu
         $userStatement = $pdo->prepare("SELECT * FROM users WHERE id = :id");
         $userStatement->bindParam(":id", $id, PDO::PARAM_INT);
         $userStatement->execute();
-        $userData = $userStatement->fetch(PDO::FETCH_ASSOC);
+        $userData = $userStatement->fetch();
         return $userData;
     }
 
@@ -290,7 +290,7 @@ class Panfu
             $userStatement = $pdo->prepare("SELECT * FROM users WHERE name = :name");
             $userStatement->bindParam(":name", $username, PDO::PARAM_INT);
             $userStatement->execute();
-            $userData = $userStatement->fetch(PDO::FETCH_ASSOC);
+            $userData = $userStatement->fetch();
             return $userData;
         } else {
             return null;
@@ -461,7 +461,7 @@ class Panfu
         $itemStatement = $pdo->prepare("SELECT * FROM items WHERE id = :id");
         $itemStatement->bindParam(":id", $itemId, PDO::PARAM_INT);
         $itemStatement->execute();
-        $itemData = $itemStatement->fetch(PDO::FETCH_ASSOC);
+        $itemData = $itemStatement->fetch();
         if($itemData["type"] < 10) {
             $itemData["type"] = "0" . (string)$itemData["type"];
         }
