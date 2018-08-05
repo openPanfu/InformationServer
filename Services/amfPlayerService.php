@@ -61,7 +61,7 @@ class amfPlayerService
     /**
      * Set the tour status
      *
-     * @param int $statuc
+     * @param int $status
      * @author Altro50 <altro50@msn.com>
      * @return AmfResponse
      */
