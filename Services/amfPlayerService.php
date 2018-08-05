@@ -61,17 +61,26 @@ class amfPlayerService
     /**
      * Set the tour status
      *
-     * @param int $value
+     * @param int $status
      * @author Altro50 <altro50@msn.com>
      * @return AmfResponse
      */
-    public function updateTourFinished($value)
+    public function updateTourFinished($status)
     {
-        return new AmfResponse();
+        $response = new AmfResponse();
+        $pdo = Database::getPDO();
+        $update = $pdo->prepare("UPDATE users SET tour_finished = :status WHERE id = :playerId");
+        $update->bindParam(":status", $status, PDO::PARAM_BOOL);
+        $update->bindParam(":playerId", $_SESSION['id'], PDO::PARAM_INT);
+        $update->execute();
+        $response->statusCode = 0;
+        $response->message = "Tour updated!";
+        $response->valueObject = null;
+        return $response;
     }
 
     /**
-     * Purchase a item
+     * Purchase an item
      *
      * @param int $itemId The id to add to the user's profile
      * @param string $itemHash A hash to validate.
@@ -134,7 +143,7 @@ class amfPlayerService
         return $response;
     }
     /**
-     * Delete a item
+     * Delete an item
      *
      * @param int[] $itemArray Arrays of items to remove.
      * @author Altro50 <altro50@msn.com>
