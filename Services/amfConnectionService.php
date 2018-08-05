@@ -18,7 +18,7 @@ require_once 'Vo/PartnerTrackingVO.php';
 class amfConnectionService
 {
     /**
-     * Login a user using a loginVO
+     * Logs a user in using loginVO.
      *
      * @param loginVO $loginVo
      * @author Altro50 <altro50@msn.com>
@@ -43,23 +43,46 @@ class amfConnectionService
             $response->valueObject->email = $userData['email'];
             $response->valueObject->ticketId = Panfu::generateSessionId();
             $response->valueObject->gameServers = Panfu::getGameServers();
-            // TODO: implement tour
-            $response->valueObject->showTour = false;
+            $response->valueObject->showTour = Self::doShowTour($_SESSION['id']);
             $response->valueObject->playerInfo = Panfu::getPlayerInfoForId($_SESSION['id']);
         } else {
             $response->statusCode = 1;
         }
         return $response;
     }
+   
+    /**
+     * Checks if the tour is already finished or not.
+     *
+     * @param int $id
+     * @author Zaseth
+     * @return Boolean
+     *
+     * If tour_finished is 1, showTour will be false.
+     * If tour_finished is 0, showTour will be true.
+     */
+    public function doShowTour($id)
+        {
+	$pdo = Database::getPDO();
+	$select = $pdo->prepare("SELECT tour_finished FROM users WHERE id = :playerId");
+	$select->bindParam(":playerId", $id, PDO::PARAM_INT);
+	$select->execute();
+	$result = $select->fetch(PDO::FETCH_ASSOC);
+	$isFinished = $result["tour_finished"];
+	if($isFinished == 1) {
+	    return false;
+	}
+	return true;
+    }
 
     /**
-     * Login a user using a session ticket
+     * Login a user using a session ticket.
      *
      * @param String $sessionTicket
      * @author Altro50 <altro50@msn.com>
      * @return AmfResponse
      *
-     *  valueObject will be a LoginResultVO if accepted
+     *  valueObject will be a LoginResultVO if accepted.
      *  statusCode will be set to 0 (SUCCESS) if accepted.
      *  statusCode will be set to 1 (GENERAL_ERROR) if declined.
      */
@@ -71,7 +94,7 @@ class amfConnectionService
     }
 
     /**
-     * Register a user using a registerVO
+     * Register a user using registerVO.
      *
      * @param registerVO $registerVO
      * @author Altro50 <altro50@msn.com>
