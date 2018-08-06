@@ -56,7 +56,7 @@ class amfConnectionService
      * Login an user using a session ticket
      *
      * @param String $sessionTicket
-     * @author Altro50 <altro50@msn.com>
+     * @author Christiaan Bultena <christiaanbultena49@gmail.com>
      * @return AmfResponse
      *
      *  valueObject will be a LoginResultVO if accepted
@@ -66,7 +66,21 @@ class amfConnectionService
     public function doLoginSession($sessionTicket)
 	{
         $response = new AmfResponse();
-        $response->statusCode = 7;
+	    if(Panfu::doLoginSession($sessionTicket)) {
+            $userData = Panfu::getUserDataById($_SESSION['id']);
+            $response->statusCode = 0;
+            $response->valueObject = new LoginResultVO();
+            $response->valueObject->partnerTracking = new PartnerTrackingVO();
+            $response->valueObject->membershipStatus = 0; // 1 = Show validate email message.
+            $response->valueObject->email = $userData['email'];
+            $response->valueObject->ticketId = Panfu::generateSessionId();
+            $response->valueObject->gameServers = Panfu::getGameServers();
+            // TODO: implement tour
+            $response->valueObject->showTour = false;
+            $response->valueObject->playerInfo = Panfu::getPlayerInfoForId($_SESSION['id']);
+        } else {
+	        $response->statusCode = 1;
+        }
         return $response;
     }
 

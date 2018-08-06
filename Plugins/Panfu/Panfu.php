@@ -54,7 +54,7 @@ class Panfu
      */
     public static function generateSessionId()
     {
-        $sessionId = rand(1000, 9000);
+        $sessionId = ($_SESSION['id']."_".rand(1000000000000000, 99999999999999999));
         $pdo = Database::getPDO();
         $stmt = $pdo->prepare("UPDATE users SET ticket_id = :ticket WHERE id = :id");
         $stmt->bindParam(':ticket', $sessionId);
@@ -132,13 +132,13 @@ class Panfu
      * @param loginVO $loginVO Login data
      * @return boolean
      */
+
     public static function loginUserWithVo($loginVO)
     {
         if(isset($loginVO->_explicitType) && $loginVO->_explicitType == "com.pandaland.mvc.model.vo.LoginVO") {
             Console::log("User " . $loginVO->playerName . " is trying to login.");
             $username = $loginVO->playerName;
             $password = $loginVO->pw;
-
             // Make sure the username has been taken.
             if(!Panfu::usernameNotTaken($username)) {
                 $userData = Panfu::getUserDataByUsername($username);
@@ -150,6 +150,28 @@ class Panfu
             return false;
         }
         return false;
+    }
+
+    /**
+     * Register a user with the data provided in the registerVO
+     * @author Christiaan Bultena <christiaanbultena49@gmail.com>
+     * @param ticketId
+     * @return boolean
+     */
+    public static function doLoginSession($ticketId)
+    {
+        $userId = explode('_',$ticketId)[0];
+        $pdo = Database::getPDO();
+        $stmt = $pdo->prepare("Select count(*) from users where id = :userId AND ticket_id = :ticket");
+        $stmt->bindParam(":userId", $userId);
+        $stmt->bindParam(":ticket", $ticketId);
+        $stmt->execute();
+        if ($stmt->rowCount() == 1) {
+            $_SESSION["id"] = $userId;
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     /**
