@@ -530,6 +530,22 @@ class Panfu
     }
 
     /**
+     * Removes an item from the user's inventory.
+     * @author Altro50 <altro50@msn.com>
+     * @param Int $itemId
+     * @return void
+     */
+    public static function removeFromInventory($itemId)
+    {
+        if(Panfu::hasItem($itemId)) {
+            $removeStatement = $pdo->prepare("DELETE FROM inventories WHERE user_id = :userId AND item_id = :itemId");
+            $removeStatement->bindParam(":userId", $_SESSION['id'], PDO::PARAM_INT);
+            $removeStatement->bindParam(":itemId", $itemId, PDO::PARAM_INT);
+            $removeStatement->execute();
+        }
+    }
+
+    /**
      * Checks if the current user has a certain item.
      * @author Altro50 <altro50@msn.com>
      * @param Int $itemId

@@ -151,7 +151,9 @@ class amfPlayerService
      */
     public function removeItems($itemArray)
     {
-        // TODO: implement, this is a placeholder so that the client-side inventory isn't overwritten.
+        foreach($itemArray as $item) {
+            Panfu::removeFromInventory($item);
+        }
         $response = new AmfResponse();
         $response->valueObject = new InventoryVO();
         $response->valueObject->activeItems = Panfu::getInventory($_SESSION['id'], true);
