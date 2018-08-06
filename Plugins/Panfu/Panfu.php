@@ -153,7 +153,7 @@ class Panfu
     }
 
     /**
-     * Register a user with the data provided in the registerVO
+     * Log-in the user with a session id.
      * @author Christiaan Bultena <christiaanbultena49@gmail.com>
      * @param ticketId
      * @return boolean
@@ -549,7 +549,7 @@ class Panfu
     }
 
     /**
-     * Checks if the current user has a certain item.
+     * Gets the inventory for a user.
      * @author Altro50 <altro50@msn.com>
      * @param Int $userId
      * @param Boolean $active
@@ -573,6 +573,17 @@ class Panfu
             }
         }
         return $items;
+    }
+
+    /**
+     * Checks if the item type is a piece of furniture.
+     * @author Altro50 <altro50@msn.com>
+     * @param Int $itemType the type to check.
+     * @return Boolean True if furniture.
+     */
+    public static function isFurniture($itemType)
+    {
+        return ($itemType == "13" || $itemType == "17" || $itemType == "14" || $itemType == "00" || $itemType == "50");
     }
 
     /**
