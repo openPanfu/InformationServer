@@ -1,4 +1,6 @@
 <?php
+
+use League\Flysystem\Exception;
 /**
  * This file is part of openPanfu, a project that imitates the Flex remoting
  * and gameservers of Panfu.
@@ -12,6 +14,9 @@ require_once 'Vo/AmfResponse.php';
 require_once 'Vo/ListVO.php';
 require_once 'Vo/StateVO.php';
 require_once 'Vo/InventoryVO.php';
+require_once 'Vo/HomeDataVO.php';
+
+
 
 class amfPlayerService
 {
@@ -198,6 +203,76 @@ class amfPlayerService
         $response = new AmfResponse();
         if(Panfu::isLoggedIn()) {
             $response->valueObject = Panfu::getPlayerInfoForId($playerId);
+        }
+        return $response;
+    }
+
+    public function lockHome($locked)
+    {
+        //TODO: stubbed
+        return new AmfResponse();
+    }
+
+    /**
+     * Returns the furniture for a user, to form their home.
+     *
+     * @param int $playerId
+     * @author Altro50 <altro50@msn.com>
+     * @return AmfResponse
+     */
+    public function getPlayerHome($playerId)
+    {
+        $response = new AmfResponse();
+        if(Panfu::isLoggedIn()) {
+            try {
+                $response->valueObject = new HomeDataVO();
+                $response->valueObject->id = 0;
+                $response->valueObject->playerID = $playerId;
+                $response->valueObject->locked = false; // TODO: store in Database
+                $response->valueObject->furnitureList = Panfu::getFurniture($playerId);
+                $response->valueObject->trackList = []; // TODO: add
+                $response->valueObject->pets = []; // TODO: add
+                $response->valueObject->pokoPets = []; // TODO: add
+                $response->valueObject->bollies = []; // TODO: add
+            } catch(Exception $e) {
+                $response->statusCode = 1;
+                $response->message = "Error occured while getting your inventory.";
+                return $response;
+            }
+        }
+        return $response;
+    }
+
+    
+    /**
+     * Updates the furniture provided in $furnitureList.
+     *
+     * @param FurnitureDataVO[] $furnitureList
+     * @author Altro50 <altro50@msn.com>
+     * @return AmfResponse
+     */
+    public function updateFurnitures($furnitureList)
+    {
+        $response = new AmfResponse();
+        if(Panfu::isLoggedIn()) {
+            try {
+                $pdo = Database::getPDO();
+                foreach($furnitureList as $FurnitureDataVO) {
+                    $update = $pdo->prepare("UPDATE inventories SET x = :x, y = :y, rot = :rot, room = :room, active = :active WHERE user_id = :playerId AND item_id = :itemId");
+                    $update->bindParam(":x", $FurnitureDataVO->x, PDO::PARAM_INT);
+                    $update->bindParam(":y", $FurnitureDataVO->y, PDO::PARAM_INT);
+                    $update->bindParam(":rot", $FurnitureDataVO->rot, PDO::PARAM_INT);
+                    $update->bindParam(":room", $FurnitureDataVO->roomID, PDO::PARAM_INT);
+                    $update->bindParam(":active", $FurnitureDataVO->active, PDO::PARAM_INT);
+                    $update->bindParam(":playerId", $_SESSION['id'], PDO::PARAM_INT);
+                    $update->bindParam(":itemId", $FurnitureDataVO->id, PDO::PARAM_INT);
+                    $update->execute();
+                }
+            } catch(Exception $e) {
+                $response->statusCode = 1;
+                $response->message = "Error occured while updating your inventory.";
+                return $response;
+            }
         }
         return $response;
     }

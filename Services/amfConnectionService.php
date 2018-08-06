@@ -32,8 +32,13 @@ class amfConnectionService
 	{
         $response = new AmfResponse();
         if(Panfu::loginUserWithVo($loginVo)) {
+            // Color black
             if(!Panfu::hasItem(1001)) {
                 Panfu::addItemToUser(1001, true);
+            }
+            // Treehouse
+            if(!Panfu::hasItem(100)) {
+                Panfu::addItemToUser(100, true);
             }
             $userData = Panfu::getUserDataById($_SESSION['id']);
             $response->statusCode = 0;
@@ -67,6 +72,14 @@ class amfConnectionService
 	{
         $response = new AmfResponse();
 	    if(Panfu::doLoginSession($sessionTicket)) {
+            // Color black
+            if(!Panfu::hasItem(1001)) {
+                Panfu::addItemToUser(1001, true);
+            }
+            // Treehouse
+            if(!Panfu::hasItem(100)) {
+                Panfu::addItemToUser(100, true);
+            }
             $userData = Panfu::getUserDataById($_SESSION['id']);
             $response->statusCode = 0;
             $response->valueObject = new LoginResultVO();

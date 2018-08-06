@@ -99,6 +99,36 @@ class Panfu
         }
     }
 
+    public static function getFurniture($userId)
+    {
+        require_once AMFPHP_ROOTPATH . "/Services/Vo/FurnitureDataVO.php";
+        $pdo = Database::getPDO();
+        $statement = $pdo->prepare("SELECT * FROM inventories WHERE user_id = :id");
+        $statement->bindParam(":id", $userId, PDO::PARAM_INT);
+        $statement->execute();
+        $items = [];
+        if($statement->rowCount() > 0) {
+            foreach ($statement as $inventoryEntry) {
+                $item = Panfu::getItem($inventoryEntry['item_id']);
+                if(Panfu::isFurniture($item['type'])) {
+                    $items[$i] = new FurnitureDataVO();
+                    $items[$i]->uid = $userId;
+                    $items[$i]->id = $inventoryEntry['item_id'];
+                    $items[$i]->type = $item['type'];
+                    $items[$i]->active = $inventoryEntry['active'];
+                    $items[$i]->premium = true;
+                    $items[$i]->bought = true;
+                    $items[$i]->x = $inventoryEntry['x'];
+                    $items[$i]->y = $inventoryEntry['y'];
+                    $items[$i]->rot = $inventoryEntry['rot'];
+                    $items[$i]->roomID = $inventoryEntry['room'];
+                    $i++;
+                }
+            }
+        }
+        return $items;
+    }
+
     /**
      * Returns the gameservers on db as GameServerVOs
      * @author Altro50 <altro50@msn.com>
