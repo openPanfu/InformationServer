@@ -14,7 +14,7 @@
             {
                 "label":"Good",
                 "children":[
-                    
+
                     {
                         "label":"Good Night!"
                     },
@@ -27,7 +27,7 @@
                     {
                         "label":"Good morning!"
                     }
-                    
+
                 ]
             },
             {
@@ -52,6 +52,154 @@
             },
             {
                 "label":"See you tomorrow!"
+            }
+        ]
+    },
+    {
+        "label":"Colors",
+        "children":[
+            {
+                "label":"Red"
+            },
+            {
+                "label":"Blue"
+            },
+            {
+                "label":"Green"
+            },
+            {
+                "label":"Yellow"
+            },
+            {
+                "label":"Pink"
+            },
+            {
+                "label":"Black"
+            },
+            {
+                "label":"White"
+            },
+            {
+                "label":"Orange"
+            },
+            {
+                "label":"Purple"
+            },
+            {
+                "label":"Brown"
+            },
+            {
+                "label":"Magenta"
+            }
+        ]
+    },
+    {
+        "label":"Places",
+        "children":[
+            {
+                "label":"City"
+            },
+            {
+                "label":"Sanfran Panfu"
+            },
+            {
+                "label":"Pet Shop"
+            },
+            {
+                "label":"Bitterland"
+            },
+            {
+                "label":"Gift Shop"
+            },
+            {
+                "label":"Jungle"
+            },
+            {
+                "label":"Castle"
+            },
+            {
+                "label":"Lake"
+            },
+            {
+                "label":"Volcano"
+            },
+            {
+                "label":"Racetrack"
+            },
+            {
+                "label":"Sportsfield"
+            },
+            {
+                "label":"Pony Stable"
+            },
+            {
+                "label":"Old Harbour"
+            },
+            {
+                "label":"Beach"
+            },
+            {
+                "label":"Pool"
+            },
+            {
+                "label":"Bitter Forest"
+            },
+            {
+                "label":"Pokopet Barn"
+            }
+        ]
+    },
+    {
+        "label":"Questions",
+        "children":[
+            {
+                "label":"Where would you like to go?"
+            },
+            {
+                "label":"What's your favorite color?"
+            },
+            {
+                "label":"How are you?"
+            },
+            {
+                "label":"Do you want to play a game?"
+            },
+            {
+                "label":"Answers",
+                "children":[
+                    {
+                        "label":"Yes"
+                    },
+                    {
+                        "label":"No"
+                    },
+                    {
+                        "label":"Ok"
+                    },
+                    {
+                        "label":"Maybe"
+                    },
+                    {
+                        "label":"Good"
+                    },
+                    {
+                        "label":"Bad"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "label":"Party",
+        "children":[
+            {
+                "label":"Party at my treehouse!"
+            },
+            {
+                "label":"Nice treehouse!"
+            },
+            {
+                "label":"Can you come to my treehouse?"
             }
         ]
     }
