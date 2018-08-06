@@ -54,7 +54,7 @@ class Panfu
      */
     public static function generateSessionId()
     {
-        $sessionId = ($_SESSION['id']."_".rand(1000000000000000, 99999999999999999));
+        $sessionId = ($_SESSION['id']."_".substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-"), 0, 64));
         $pdo = Database::getPDO();
         $stmt = $pdo->prepare("UPDATE users SET ticket_id = :ticket WHERE id = :id");
         $stmt->bindParam(':ticket', $sessionId);
