@@ -1,6 +1,4 @@
 <?php
-
-use League\Flysystem\Exception;
 /**
  * This file is part of openPanfu, a project that imitates the Flex remoting
  * and gameservers of Panfu.
