@@ -178,6 +178,12 @@
                     },
                     {
                         "label":"Maybe"
+                    },
+                    {
+                        "label":"Good"
+                    },
+                    {
+                        "label":"Bad"
                     }
                 ]
             }
