@@ -165,6 +165,9 @@
                 "label":"Do you want to play a game?"
             },
             {
+                "label":"Can you come to my treehouse?"
+            },
+            {
                 "label":"Answers",
                 "children":[
                     {
@@ -199,7 +202,7 @@
                 "label":"Nice treehouse!"
             },
             {
-                "label":"Can you come to my treehouse?"
+                "label":"Party in the disco!"
             }
         ]
     }
