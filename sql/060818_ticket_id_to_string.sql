@@ -1,2 +1,2 @@
 -- Turns ticket_id into a varchar.
-ALTER TABLE `users` ALTER COLUMN `ticket_id` varchar;
+ALTER TABLE `users` CHANGE `ticket_id` `ticket_id` VARCHAR(11) NULL DEFAULT NULL; 
