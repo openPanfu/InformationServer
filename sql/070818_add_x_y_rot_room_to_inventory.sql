@@ -1,0 +1,2 @@
+-- Adds the values x, y, rot and room to inventories.
+alter table `inventories` add `x` int not null default '0' after `item_id`, add `y` int not null default '0' after `x`, add `rot` int not null default '0' after `y`, add `room` int not null default '0' after `rot`;
