@@ -16,7 +16,7 @@ Alter /Plugins/Database/Database.php to match your MYSQL setup.
 
 (optionally) add new words to the wordfilter in /Plugins/Panfu/wordfilter.txt.
 
-Run the php localserver with `php -S 0.0.0.0:9090` or use apache or nginx.
+Run the php localserver with `php -S 0.0.0.0:9090` or use a webserver like apache or nginx.
 
 #### Client setup
 
