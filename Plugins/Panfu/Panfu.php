@@ -193,10 +193,9 @@ class Panfu
         $pdo = Database::getPDO();
         $stmt = $pdo->prepare("Select id from users where ticket_id = :ticket");
         $stmt->bindParam(":ticket", $ticketId);
-        $result = $stmt->execute();
+        $userId = $stmt->execute();
         if ($stmt->rowCount() == 1) {
-            $_SESSION["id"] = $result;
-            console::log('Succesfully set $_SESSION["id"] as '.$result);
+            $_SESSION["id"] = $userId;
             return 1;
         } else {
             return 0;

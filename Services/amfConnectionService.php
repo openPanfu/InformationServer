@@ -71,7 +71,7 @@ class amfConnectionService
     public function doLoginSession($sessionTicket)
 	{
         $response = new AmfResponse();
-	    if(Panfu::doLoginSession($sessionTicket) == 1) {
+	    if(Panfu::doLoginSession($sessionTicket)) {
             // Color black
             if(!Panfu::hasItem(1001)) {
                 Panfu::addItemToUser(1001, true);
