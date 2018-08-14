@@ -190,14 +190,13 @@ class Panfu
      */
     public static function doLoginSession($ticketId)
     {
-        $userId = explode('_',$ticketId)[0];
         $pdo = Database::getPDO();
-        $stmt = $pdo->prepare("Select count(*) from users where id = :userId AND ticket_id = :ticket");
-        $stmt->bindParam(":userId", $userId);
+        $stmt = $pdo->prepare("Select id from users where ticket_id = :ticket");
         $stmt->bindParam(":ticket", $ticketId);
-        $stmt->execute();
+        $result = $stmt->execute();
         if ($stmt->rowCount() == 1) {
-            $_SESSION["id"] = $userId;
+            $_SESSION["id"] = $result;
+            console::log('Succesfully set $_SESSION["id"] as '.$result);
             return 1;
         } else {
             return 0;
