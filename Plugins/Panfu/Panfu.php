@@ -211,11 +211,11 @@ class Panfu
     public static function registerUserWithVo($registerVO)
     {
         if(isset($registerVO->_explicitType)) {
-            if ($registerVO->_explicitType == "com.pandaland.mvc.model.vo.RegisterVO" && $registerVO->pwParents === "..7654..") {
+            if ($registerVO->_explicitType == "com.pandaland.mvc.model.vo.RegisterVO") {
                 $name = (string)$registerVO->name;
                 $password = (string)password_hash($registerVO->pw, PASSWORD_BCRYPT);
                 $email = (string)$registerVO->emailParents;
-                $sex = (int)($registerVO->sex == "girl");
+                $sex = (int)($registerVO->sex == "girl" || $registerVO->sex == "FEMALE");
 
                 if(Panfu::usernameAcceptable($name) && Panfu::usernameNotTaken($name)) {
                     $pdo = Database::getPDO();
@@ -266,7 +266,6 @@ class Panfu
             $username = str_replace("-", "", $username);
             $username = Panfu::undoLeet($username);
 
-
             // Load the wordfilter first
             if (sizeof(Panfu::$wordFilter) === 0) {
                 Panfu::$wordFilter = explode("\n", str_replace("\r", "", file_get_contents(__DIR__ . "/wordfilter.txt")));
@@ -277,7 +276,6 @@ class Panfu
                     continue;
                 }
                 if(strpos($username, $forbiddenWord) !== false) {
-                    Console::log($username . " contains the forbidden word: " . $forbiddenWord);
                     return false;
                 }
             }

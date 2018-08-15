@@ -118,6 +118,13 @@ class amfConnectionService
         return $response;
     }
 
+
+    /* Stubbed */
+    public function setEmailAddress($userId, $email, $alwaysTrue)
+    {
+        return new AmfResponse();
+    }
+
     /**
      * Checks if the username has already been taken or is not acceptable.
      *
