@@ -185,20 +185,25 @@ class Panfu
     /**
      * Log-in the user with a session id.
      * @author Christiaan Bultena <christiaanbultena49@gmail.com>
+     * @author Altro50 <altro50@msn.com>
      * @param ticketId
      * @return boolean
      */
     public static function doLoginSession($ticketId)
     {
+        if($ticketId === null || $ticketId === "" || strlen($ticketId) < 5) {
+            return false;
+        }
+
         $pdo = Database::getPDO();
         $stmt = $pdo->prepare("Select id from users where ticket_id = :ticket");
         $stmt->bindParam(":ticket", $ticketId);
         $userId = $stmt->execute();
         if ($stmt->rowCount() == 1) {
             $_SESSION["id"] = $userId;
-            return 1;
+            return true;
         } else {
-            return 0;
+            return false;
         }
     }
 
