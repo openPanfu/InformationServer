@@ -1,0 +1,2 @@
+-- Adds the relations table if you're using base.sql.
+create table `relations` (`id` int unsigned not null auto_increment primary key, `player1` int not null, `player2` int not null, `relation_type` tinyint not null, `created_at` timestamp null, `updated_at` timestamp null) default character set utf8mb4 collate 'utf8mb4_unicode_ci'

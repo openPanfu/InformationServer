@@ -88,6 +88,7 @@ class Panfu
             $playerInfo->socialScore = $userData['social_score'];
             $playerInfo->activeInventory = Panfu::getInventory($userData['id'], true);
             $playerInfo->inactiveInventory = Panfu::getInventory($userData['id'], false);
+            $playerInfo->buddies = Panfu::getBuddiesForUserId($userId);
 
             // Let's calculate the days since register.
             $now = time();
@@ -176,6 +177,15 @@ class Panfu
         return $gameServers;
     }
 
+    public static function getGameServerKey($id)
+    {
+        $pdo = Database::getPDO();
+        $statement = $pdo->prepare("SELECT secret_key FROM gameservers WHERE id=:id");
+        $statement->bindParam(":id", $id, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetch()["secret_key"];
+    }
+
     /**
      * Log-in the user in the loginVO data.
      * @author Altro50 <altro50@msn.com>
@@ -218,9 +228,11 @@ class Panfu
         $pdo = Database::getPDO();
         $stmt = $pdo->prepare("Select id from users where ticket_id = :ticket");
         $stmt->bindParam(":ticket", $ticketId);
-        $userId = $stmt->execute();
+        $stmt->execute();
         if ($stmt->rowCount() == 1) {
+            $userId = $stmt->fetch()["id"];
             $_SESSION["id"] = $userId;
+            GSCommunicator::checkConnection();
             return true;
         } else {
             return false;
@@ -332,6 +344,166 @@ class Panfu
             }
         }
         return false;
+    }
+
+    /**
+     * Adds two players to eachother's friendslist
+     * @author Altro50 <altro50@msn.com>
+     * @param int $buddy1
+     * @param int $buddy2
+     * @return void
+     */
+    public static function addBuddies($buddy1, $buddy2)
+    {
+        Panfu::setRelationBetweenPlayers($buddy1, $buddy2, 1);
+        Panfu::setRelationBetweenPlayers($buddy2, $buddy1, 1);
+    }
+
+    /**
+     * Removes players from eachother's friendslist
+     * @author Altro50 <altro50@msn.com>
+     * @param int $buddy1
+     * @param int $buddy2
+     * @return void
+     */
+    public static function removeBuddies($buddy1, $buddy2)
+    {
+        Panfu::setRelationBetweenPlayers($buddy1, $buddy2, 0);
+        Panfu::setRelationBetweenPlayers($buddy2, $buddy1, 0);
+    }
+
+    /**
+     * Ignore a user with userId
+     * @author Altro50 <altro50@msn.com>
+     * @param int $playerId
+     * @return void
+     */
+    public static function ignorePlayer($playerId)
+    {
+        Panfu::setRelationBetweenPlayers($_SESSION['id'], $playerId, 2);
+    }
+
+    /**
+     * Changes or inserts a relation between two users.
+     * @author Altro50 <altro50@msn.com>
+     * @param int $player1
+     * @param int $player2
+     * @param int $relation
+     * @return void
+     */
+    public static function setRelationBetweenPlayers($player1, $player2, $relation)
+    {
+        $pdo = Database::getPDO();
+        
+        if(!Panfu::hasRelation($player1, $player2)) {
+            $insert = $pdo->prepare("INSERT INTO relations (player1, player2, relation_type) VALUES (:player1, :player2, :relation_type)");
+            $insert->bindParam(":player1", $player1);
+            $insert->bindParam(":player2", $player2);
+            $insert->bindParam(":relation_type", $relation);
+            $insert->execute();
+        } else {
+            $update = $pdo->prepare("UPDATE relations SET relation_type = :relation_type WHERE player1 = :player1 AND player2 = :player2");
+            $update->bindParam(":relation_type", $relation);
+            $update->bindParam(":player1", $player1);
+            $update->bindParam(":player2", $player2);
+            $update->execute();
+        }
+
+        GSCommunicator::communicate("updateBuddyStatus", $player1, $player2, $relation);
+    }
+
+    /**
+     * Checks if a relation between two users exists
+     * @author Altro50 <altro50@msn.com>
+     * @param int $player1
+     * @param int $player2
+     * @return boolean wether a relation exists
+     */
+    public static function hasRelation($player1, $player2)
+    {
+        $pdo = Database::getPDO();
+        $statement = $pdo->prepare("SELECT id FROM relations WHERE player1 = :player1 AND player2 = :player2");
+        $statement->bindParam(":player1", $player1, PDO::PARAM_INT);
+        $statement->bindParam(":player2", $player2, PDO::PARAM_INT);
+        $statement->execute();
+        return ($statement->rowCount() > 0);
+    }
+
+    /**
+     * Gets users on the user's relation list with a specific relation type.
+     * @author Altro50 <altro50@msn.com>
+     * @param int $player1
+     * @param int $relation
+     * @return int[] Players on the user's relation list with the specified relation type.
+     */
+    public static function getPlayersWithRelation($player1, $relation)
+    {
+        $pdo = Database::getPDO();
+        $statement = $pdo->prepare("SELECT * FROM relations WHERE player1 = :player1 AND relation_type = :relation_type");
+        $statement->bindParam(":player1", $player1, PDO::PARAM_INT);
+        $statement->bindParam(":relation_type", $relation);
+        $statement->execute();
+        $relations = $statement->fetchAll();
+        $players = [];
+        $i = 0;
+        foreach($relations as $relation) {
+            // player2 will always be someone you have a relation with.
+            $players[$i] = $relation['player2'];
+            $i++;
+        }
+        return $players;
+    }
+
+    /**
+     * Gets a list of all buddies on the user's relation list.
+     * @author Altro50 <altro50@msn.com>
+     * @param int $userId
+     * @return SmallPlayerInfoVO[] Buddies
+     */
+    public static function getBuddiesForUserId($userId)
+    {
+        require_once AMFPHP_ROOTPATH . "/Services/Vo/SmallPlayerInfoVO.php";
+        $buddies = Panfu::getPlayersWithRelation($userId, 1);
+        $buddyArray = [];
+        $i = 0;
+        foreach($buddies as $buddyId) {
+            $data = Panfu::getUserDataById($buddyId);
+            $buddyArray[$i] = new SmallPlayerInfoVO();
+            $buddyArray[$i]->playerId = $buddyId;
+            $buddyArray[$i]->playerName = $data["name"];
+            if($data["current_gameserver"] != null && $data["current_gameserver"] != 0)
+                $buddyArray[$i]->currentGameServer = $data["current_gameserver"];
+
+            $i++;
+        }
+        return $buddyArray;
+    }
+
+    /**
+     * Gets a list of all buddies on the user's relation list as BuddyVo objects.
+     * @author Altro50 <altro50@msn.com>
+     * @param int $userId
+     * @return SmallPlayerInfoVO[] Buddies
+     */
+    public static function getBuddiesVoForUserId($userId)
+    {
+        require_once AMFPHP_ROOTPATH . "/Services/Vo/BuddyVO.php";
+        $buddies = Panfu::getPlayersWithRelation($userId, 1);
+        $buddyArray = [];
+        $i = 0;
+        foreach($buddies as $buddyId) {
+            $data = Panfu::getUserDataById($buddyId);
+            $buddyArray[$i] = new BuddyVO();
+            $buddyArray[$i]->id = $buddyId;
+            $buddyArray[$i]->name = $data["name"];
+            $buddyArray[$i]->premium = $data["goldpanda"];
+            $buddyArray[$i]->bestfriend = false;
+            if($data["current_gameserver"] != null && $data["current_gameserver"] != 0)
+                $buddyArray[$i]->currentGameServer = $data["current_gameserver"];
+            $buddyArray[$i]->socialLevel = $data["social_level"];
+            $i++;
+        }
+        return $buddyArray;
     }
 
     /**

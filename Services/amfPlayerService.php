@@ -83,6 +83,20 @@ class amfPlayerService
     }
 
     /**
+     * Adds the specified user to your buddy list.
+     *
+     * @param int $buddyId
+     * @author Altro50 <altro50@msn.com>
+     * @return AmfResponse
+     */
+    public function addToBuddylist($buddyId)
+    {
+        $response = new AmfResponse();
+        Panfu::addBuddies($_SESSION['id'], $buddyId);
+        return $response;
+    }
+
+    /**
      * Purchase an item
      *
      * @param int $itemId The id to add to the user's profile
