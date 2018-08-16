@@ -99,9 +99,32 @@ class Panfu
         }
     }
 
-    public static function getFurniture($userId)
+    /**
+     * Gets the piece of furniture from the database as a FurnitureDataVO
+     * @author Altro50 <altro50@msn.com>
+     * @param int $itemId
+     * @return FurnitureDataVO
+     */
+    public static function getFurnitureVo($itemId)
     {
         require_once AMFPHP_ROOTPATH . "/Services/Vo/FurnitureDataVO.php";
+        $response = new FurnitureDataVO();
+        $item = Panfu::getItem($itemId);
+        $response->uid = $userId;
+        $response->id = $itemId;
+        $response->type = $item['type'];
+        $response->active = false;
+        $response->premium = true;
+        $response->bought = true;
+        $response->x = 0;
+        $response->y = 0;
+        $response->rot = 0;
+        $response->roomID = 0;
+        return $response;
+    }
+
+    public static function getFurniture($userId)
+    {
         $pdo = Database::getPDO();
         $statement = $pdo->prepare("SELECT * FROM inventories WHERE user_id = :id");
         $statement->bindParam(":id", $userId, PDO::PARAM_INT);
@@ -111,10 +134,7 @@ class Panfu
             foreach ($statement as $inventoryEntry) {
                 $item = Panfu::getItem($inventoryEntry['item_id']);
                 if(Panfu::isFurniture($item['type'])) {
-                    $items[$i] = new FurnitureDataVO();
-                    $items[$i]->uid = $userId;
-                    $items[$i]->id = $inventoryEntry['item_id'];
-                    $items[$i]->type = $item['type'];
+                    $items[$i] = Panfu::getFurnitureVo($inventoryEntry['item_id']);
                     $items[$i]->active = $inventoryEntry['active'];
                     $items[$i]->premium = true;
                     $items[$i]->bought = true;

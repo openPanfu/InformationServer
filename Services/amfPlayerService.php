@@ -101,8 +101,13 @@ class amfPlayerService
                     Panfu::addItemToUser($itemId);
                     $response->message = "Item added!";
                     $response->statusCode = 0;
-                    $itemVO = Panfu::getItemVo($itemId);
-                    $response->valueObject =  $itemVO;
+                    if(!Panfu::isFurniture($itemData['type'])) {
+                        $itemVO = Panfu::getItemVo($itemId);
+                        $response->valueObject = $itemVO;
+                    } else {
+                        $furniVO = Panfu::getFurnitureVo($itemId);
+                        $response->valueObject = $furniVO;
+                    }
                 } else {
                     $response->message = "Not enough coins.";
                     $response->statusCode = 6;
