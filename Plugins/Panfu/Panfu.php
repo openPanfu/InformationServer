@@ -690,7 +690,7 @@ class Panfu
         $insert = $pdo->prepare("INSERT INTO inventories (user_id, item_id, active, bought) VALUE (:userId, :itemId, :active, true)");
         $insert->bindParam(":userId", $_SESSION['id'], PDO::PARAM_INT);
         $insert->bindParam(":itemId", $itemId, PDO::PARAM_INT);
-        $insert->bindParam(":active", $active, PDO::PARAM_INT);
+        $insert->bindParam(":active", $active);
         $insert->execute();
     }
 
