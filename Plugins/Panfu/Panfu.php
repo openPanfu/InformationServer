@@ -801,7 +801,7 @@ class Panfu
         $i = 0;
         $statement = $pdo->prepare("SELECT * FROM inventories WHERE user_id = :id AND active = :active");
         $statement->bindParam(":id", $userId, PDO::PARAM_INT);
-        $statement->bindParam(":active", $active, PDO::PARAM_INT);
+        $statement->bindParam(":active", $active);
 
         $statement->execute();
         if($statement->rowCount() > 0) {
