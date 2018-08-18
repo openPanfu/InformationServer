@@ -40,7 +40,7 @@ class Panfu
     private static function traverseChildren($safeChatEntry)
     {
         $valueObject = new SecurityChatItemVO();
-        $valueObject->label = $safeChatEntry->label;
+        $valueObject->label = $safeChatEntry->label . " ";
         foreach($safeChatEntry->children as $child) {
             array_push($valueObject->children, Self::traverseChildren($child));
         }
