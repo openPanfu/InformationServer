@@ -143,6 +143,8 @@ class Panfu
 
                 // Well, you see, the game will completely deny any items (with an error)
                 // if you don't send the levelUp first.
+
+                // btw, thank you satoshi for telling me this.
             }
 
             // Set their score to their new score.
