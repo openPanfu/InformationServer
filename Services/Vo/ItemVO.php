@@ -20,7 +20,7 @@ class ItemVO
     /**
      * @type String
      */
-    public $type = "";
+    public $type = "00";
 
     /**
      * @type int
@@ -35,17 +35,17 @@ class ItemVO
     /**
      * @type Boolean
      */
-    public $premium = null;
+    public $premium = false;
 
     /**
      * @type Boolean
      */
-    public $bought = null;
+    public $bought = false;
 
     /**
      * @type Boolean
      */
-    public $active = null;
+    public $active = false;
 
     /**
      * @type int

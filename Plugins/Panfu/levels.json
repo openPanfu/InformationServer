@@ -1,0 +1,434 @@
+{
+    "_comments" : "This file is used for the leveling system, it contains all levels",
+    "_comments2": "with their social_score increment and rewards.",
+    "_comments3": "Reward types: item, score (coins), getgp, losegp. (DO NOT USE SP).",
+    "_comments4": "Value will correspond to the item id or the amount of coins the user receives.",
+    "maxLevel": 60,
+    "levels": [
+        {
+            "level": 1,
+            "increment": 10,
+            "rewards": []
+        },
+        {
+            "level": 2,
+            "increment": 10,
+            "rewards": []
+        },
+        {
+            "level": 3,
+            "increment": 10,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "103344"
+                }
+            ]
+        },
+        {
+            "level": 4,
+            "increment": 10,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "102685"
+                }
+            ]
+        },
+        {
+            "level": 5,
+            "increment": 10,
+            "rewards": []
+        },
+        {
+            "level": 6,
+            "increment": 10,
+            "rewards": [
+                {
+                    "type": "score",
+                    "value": "1000"
+                }
+            ]
+        },
+        {
+            "level": 7,
+            "increment": 10,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100263"
+                }
+            ]
+        },
+        {
+            "level": 8,
+            "increment": 10,
+            "rewards": []
+        },
+        {
+            "level": 9,
+            "increment": 10,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100264"
+                }
+            ]
+        },
+        {
+            "level": 10,
+            "increment": 9,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100265"
+                }
+            ]
+        },
+        {
+            "level": 11,
+            "increment": 9,
+            "rewards": []
+        },
+        {
+            "level": 12,
+            "increment": 9,
+            "rewards": [
+                {
+                    "type": "score",
+                    "value": "2000"
+                }
+            ]
+        },
+        {
+            "level": 13,
+            "increment": 9,
+            "rewards": []
+        },
+        {
+            "level": 14,
+            "increment": 9,
+            "rewards": []
+        },
+        {
+            "level": 15,
+            "increment": 9,
+            "rewards": []
+        },
+        {
+            "level": 16,
+            "increment": 9,
+            "rewards": []
+        },
+        {
+            "level": 17,
+            "increment": 9,
+            "rewards": []
+        },
+        {
+            "level": 18,
+            "increment": 9,
+            "rewards": []
+        },
+        {
+            "level": 19,
+            "increment": 9,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100352"
+                }
+            ]
+        },
+        {
+            "level": 20,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 21,
+            "increment": 8,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100351"
+                }
+            ]
+        },
+        {
+            "level": 22,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 23,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 24,
+            "increment": 8,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "9001"
+                }
+            ]
+        },
+        {
+            "level": 25,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 26,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 27,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 28,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 29,
+            "increment": 8,
+            "rewards": []
+        },
+        {
+            "level": 30,
+            "increment": 7,
+            "rewards": []
+        },
+        {
+            "level": 31,
+            "increment": 7,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100398"
+                }
+            ]
+        },
+        {
+            "level": 32,
+            "increment": 7,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100397"
+                }
+            ]
+        },
+        {
+            "level": 33,
+            "increment": 7,
+            "rewards": []
+        },
+        {
+            "level": 34,
+            "increment": 7,
+            "rewards": []
+        },
+        {
+            "level": 35,
+            "increment": 7,
+            "rewards": []
+        },
+        {
+            "level": 36,
+            "increment": 7,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100395"
+                }
+            ]
+        },
+        {
+            "level": 37,
+            "increment": 7,
+            "rewards": []
+        },
+        {
+            "level": 38,
+            "increment": 7,
+            "rewards": []
+        },
+        {
+            "level": 39,
+            "increment": 7,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100396"
+                }
+            ]
+        },
+        {
+            "level": 40,
+            "increment": 6,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "100623"
+                }
+            ]
+        },
+        {
+            "level": 41,
+            "increment": 6,
+            "rewards": []
+        },
+        {
+            "level": 42,
+            "increment": 6,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "101658"
+                }
+            ]
+        },
+        {
+            "level": 43,
+            "increment": 6,
+            "rewards": [
+                {
+                    "type": "score",
+                    "value": "5000"
+                }
+            ]
+        },
+        {
+            "level": 44,
+            "increment": 6,
+            "rewards": []
+        },
+        {
+            "level": 45,
+            "increment": 6,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "101657"
+                }
+            ]
+        },
+        {
+            "level": 46,
+            "increment": 6,
+            "rewards": []
+        },
+        {
+            "level": 47,
+            "increment": 6,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "101961"
+                }
+            ]
+        },
+        {
+            "level": 48,
+            "increment": 6,
+            "rewards": []
+        },
+        {
+            "level": 49,
+            "increment": 6,
+            "rewards": []
+        },
+        {
+            "level": 50,
+            "increment": 5,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "101971"
+                }
+            ]
+        },
+        {
+            "level": 51,
+            "increment": 5,
+            "rewards": []
+        },
+        {
+            "level": 52,
+            "increment": 5,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "103343"
+                }
+            ]
+        },
+        {
+            "level": 53,
+            "increment": 5,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "103323"
+                }
+            ]
+        },
+        {
+            "level": 54,
+            "increment": 5,
+            "rewards": []
+        },
+        {
+            "level": 55,
+            "increment": 5,
+            "rewards": []
+        },
+        {
+            "level": 56,
+            "increment": 5,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "103324"
+                }
+            ]
+        },
+        {
+            "level": 57,
+            "increment": 5,
+            "rewards": []
+        },
+        {
+            "level": 58,
+            "increment": 5,
+            "rewards": [
+                {
+                    "type": "item",
+                    "value": "103322"
+                }
+            ]
+        },
+        {
+            "level": 59,
+            "increment": 5,
+            "rewards": [
+                {
+                    "type": "score",
+                    "value": "8000"
+                }
+            ]
+        },
+        {
+            "level": 60,
+            "increment": 4,
+            "rewards": []
+        }
+    ]
+}
