@@ -36,10 +36,17 @@ class amfConnectionService
             if(!Panfu::hasItem(1001)) {
                 Panfu::addItemToUser(1001, true);
             }
+
             // Treehouse
             if(!Panfu::hasItem(100)) {
                 Panfu::addItemToUser(100, true);
             }
+
+            // Old treehouse
+            if(!Panfu::hasItem(103199)) {
+                Panfu::addItemToUser(103199, false);
+            }
+
             $userData = Panfu::getUserDataById($_SESSION['id']);
             $response->statusCode = 0;
             $response->valueObject = new LoginResultVO();
@@ -80,6 +87,12 @@ class amfConnectionService
             if(!Panfu::hasItem(100)) {
                 Panfu::addItemToUser(100, true);
             }
+
+            // Old treehouse
+            if(!Panfu::hasItem(103199)) {
+                Panfu::addItemToUser(103199, false);
+            }
+            
             $userData = Panfu::getUserDataById($_SESSION['id']);
             $response->statusCode = 0;
             $response->valueObject = new LoginResultVO();

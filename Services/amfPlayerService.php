@@ -109,11 +109,8 @@ class amfPlayerService
         $response = new AmfResponse();
         if(Panfu::isLoggedIn()) {
             if(Panfu::itemExists($itemId)) {
-                $itemData = Panfu::getItem($itemId);
-                if(Panfu::canAfford($itemData['price'])) {
-                    Panfu::deductCoins($itemData['price']);
-                    Panfu::addItemToUser($itemId);
-                    $response->message = "Item added!";
+                if(Panfu::hasItem($itemId)) {
+                    $response->message = "Item already";
                     $response->statusCode = 0;
                     if(!Panfu::isFurniture($itemData['type'])) {
                         $itemVO = Panfu::getItemVo($itemId);
@@ -123,8 +120,23 @@ class amfPlayerService
                         $response->valueObject = $furniVO;
                     }
                 } else {
-                    $response->message = "Not enough coins.";
-                    $response->statusCode = 6;
+                    $itemData = Panfu::getItem($itemId);
+                    if(Panfu::canAfford($itemData['price'])) {
+                        Panfu::deductCoins($itemData['price']);
+                        Panfu::addItemToUser($itemId);
+                        $response->message = "Item added!";
+                        $response->statusCode = 0;
+                        if(!Panfu::isFurniture($itemData['type'])) {
+                            $itemVO = Panfu::getItemVo($itemId);
+                            $response->valueObject = $itemVO;
+                        } else {
+                            $furniVO = Panfu::getFurnitureVo($itemId);
+                            $response->valueObject = $furniVO;
+                        }
+                    } else {
+                        $response->message = "Not enough coins.";
+                        $response->statusCode = 6;
+                    }
                 }
             } else {
                 $response->message = "Item doesn't exist.";

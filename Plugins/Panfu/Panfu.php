@@ -125,7 +125,6 @@ class Panfu
                             Console::log("played10 > unknown reward type " . $reward->type . "! (No handling code)");
                             break;
                     }
-                    Console::log($toPush);
                     array_push($listVo->list, $toPush);
                 }
                 
@@ -344,7 +343,6 @@ class Panfu
     public static function loginUserWithVo($loginVO)
     {
         if(isset($loginVO->_explicitType) && $loginVO->_explicitType == "com.pandaland.mvc.model.vo.LoginVO") {
-            Console::log("User " . $loginVO->playerName . " is trying to login.");
             $username = $loginVO->playerName;
             $password = $loginVO->pw;
             // Make sure the username has been taken.
@@ -842,8 +840,6 @@ class Panfu
         $result = $insert->execute();
         if(!$result) {
             Console::log($pdo->errorInfo());
-        } else {
-            Console::log("Pdo okiedokie!");
         }
     }
 
