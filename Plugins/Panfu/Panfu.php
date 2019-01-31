@@ -910,6 +910,7 @@ class Panfu
     public static function removeFromInventory($itemId)
     {
         if(Panfu::hasItem($itemId)) {
+            $pdo = Database::getPDO();
             $removeStatement = $pdo->prepare("DELETE FROM inventories WHERE user_id = :userId AND item_id = :itemId");
             $removeStatement->bindParam(":userId", $_SESSION['id'], PDO::PARAM_INT);
             $removeStatement->bindParam(":itemId", $itemId, PDO::PARAM_INT);
