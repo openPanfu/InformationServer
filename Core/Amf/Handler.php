@@ -11,8 +11,8 @@
 
 /**
  * This is the default handler for the gateway. It's job is to handle everything that is specific to Amf for the gateway.
- * 
- * @todo determine if indirection for serializer/deserializer necessary. Makes gateway code lighter, but is cumbersome 
+ *
+ * @todo determine if indirection for serializer/deserializer necessary. Makes gateway code lighter, but is cumbersome
  * @package Amfphp_Core_Amf
  * @author Ariel Sommeria-Klein
  */
@@ -55,13 +55,13 @@ class Amfphp_Core_Amf_Handler implements Amfphp_Core_Common_IDeserializer, Amfph
     /**
      * return error details
      * @see Amfphp_Core_Config::CONFIG_RETURN_ERROR_DETAILS
-     * @var boolean 
+     * @var boolean
      */
     protected $returnErrorDetails = true;
 
     /**
-     * Vo Converter. 
-     * @var Amfphp_Core_Common_IVoConverter 
+     * Vo Converter.
+     * @var Amfphp_Core_Common_IVoConverter
      */
     protected $voConverter;
     /**
@@ -75,7 +75,7 @@ class Amfphp_Core_Amf_Handler implements Amfphp_Core_Common_IDeserializer, Amfph
      * @var Amfphp_Core_Amf_Packet
      */
     public static $responsePacket;
-    
+
     /**
      * constructor
      * @param array $sharedConfig
@@ -97,7 +97,7 @@ class Amfphp_Core_Amf_Handler implements Amfphp_Core_Common_IDeserializer, Amfph
      */
     public function deserialize(array $getData, array $postData, $rawPostData) {
         $deserializer = new Amfphp_Core_Amf_Deserializer();
-        //note: this has to be done here and not in the constructor to avoid 
+        //note: this has to be done here and not in the constructor to avoid
         //disabling scanning when it's another handler that ends up handling the request
         $this->voConverter = Amfphp_Core_FilterManager::getInstance()->callFilters(Amfphp_Core_Gateway::FILTER_VO_CONVERTER, null);
         if($this->voConverter){
@@ -119,7 +119,7 @@ class Amfphp_Core_Amf_Handler implements Amfphp_Core_Common_IDeserializer, Amfph
         $split = explode('/', $targetUri);
         $ret = new Amfphp_Core_Common_ServiceCallParameters();
         $ret->methodName = array_pop($split);
-        $ret->serviceName = join($split, '/');
+        $ret->serviceName = implode('/', $split);
         $ret->methodParameters = $Amfphp_Core_Amf_Message->data;
         return $ret;
     }
