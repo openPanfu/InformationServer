@@ -12,7 +12,7 @@
 /**
  * Amfphp_Core_Amf_Deserializer takes the raw amf input stream and converts it PHP objects
  * representing the data.
- * 
+ *
  * Based on code from amfphp 1.9, adapted and enhanced by Ariel Sommeria-Klein to amfphp 2.x architecture
  * Vector code by Mick Powell
  * @package Amfphp_Core_Amf
@@ -21,7 +21,7 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
 
     /**
      * data to deserialize
-     * @var string 
+     * @var string
      */
     protected $rawData;
 
@@ -35,7 +35,7 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
 
     /**
      * The current seek cursor of the stream
-     * note: must be initialised here to avoid error 'String offset cast occured' 
+     * note: must be initialised here to avoid error 'String offset cast occured'
      *
      * @access protected
      * @var int
@@ -367,7 +367,7 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
 
     /**
      * read xml
-     * @return Amfphp_Core_Amf_Types_Xml 
+     * @return Amfphp_Core_Amf_Types_Xml
      */
     protected function readXml() {
         $str = $this->readLongUTF();
@@ -389,10 +389,10 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
     }
 
     /**
-     * tries to use the type to get a typed object. If not possible, return a stdClass, 
+     * tries to use the type to get a typed object. If not possible, return a stdClass,
      * with the explicit type marker set if the type was not just an empty string
      * @param type $typeIdentifier
-     * @return stdClass or typed object 
+     * @return stdClass or typed object
      */
     protected function resolveType($typeIdentifier) {
         if ($typeIdentifier != '') {
@@ -411,8 +411,8 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
 
     /**
      * readCustomClass reads the amf content associated with a class instance which was registered
-     * with Object.registerClass.  
-     * If a VoConverter is available, it is used to instanciate the Vo. 
+     * with Object.registerClass.
+     * If a VoConverter is available, it is used to instanciate the Vo.
      * If not, In order to preserve the class name an additional property is assigned
      * to the object Amfphp_Core_Amf_Constants::FIELD_EXPLICIT_TYPE.  This property will be overwritten if it existed within the class already.
      *
@@ -433,7 +433,7 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
     }
 
     /**
-     * read the type byte, then call the corresponding amf3 data reading function 
+     * read the type byte, then call the corresponding amf3 data reading function
      * @return mixed
      */
     public function readAmf3Data() {
@@ -649,7 +649,7 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
 
     /**
      * read amf 3 object
-     * @return mixed stdClass, or VoClass if VoConverter could find it. 
+     * @return mixed stdClass, or VoClass if VoConverter could find it.
      */
     protected function readAmf3Object() {
         $handle = $this->readAmf3Int();
@@ -743,26 +743,25 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
     protected function readBuffer($len) {
         $data = '';
         for ($i = 0; $i < $len; $i++) {
-            $data .= $this->rawData
-                    {$i + $this->currentByte};
+            $data .= $this->rawData[$i + $this->currentByte];
         }
         $this->currentByte += $len;
         return $data;
     }
-    
+
 
     /**
-     * Reads a vector array of objects from the AMF stream. This works for all vector arrays: vector-object, vector-int vector-uint and 
-     * vector-double. The Vector is cast to a PHP array. Please note that because of the way php handles integers, uints have to be cast as 
+     * Reads a vector array of objects from the AMF stream. This works for all vector arrays: vector-object, vector-int vector-uint and
+     * vector-double. The Vector is cast to a PHP array. Please note that because of the way php handles integers, uints have to be cast as
      * floats. See {@link http://php.net/manual/en/language.types.integer.php}
      * @param        int             Type - the AMF vector array type.
      * @return       array   The objects in the vector in a native PHP array.
      */
     protected function readAmf3Vector($type) {
-        /* AMF Spec: "The first (low) bit is a flag with value 1. The remaining 1 to 28 significant bits are used to encode the count of 
+        /* AMF Spec: "The first (low) bit is a flag with value 1. The remaining 1 to 28 significant bits are used to encode the count of
           items in Vector." */
         // according to the above - $inline will always be 1 after the bitshift, and what remains in $handle
-        // after the bitshift is the count of the vector 
+        // after the bitshift is the count of the vector
         $handle = $this->readAmf3Int();
         $inline = (($handle & 1) != 0 );
         $handle = $handle >> 1;
@@ -774,7 +773,7 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
             $vector->fixed = $this->readByte();
             $vector->data = array();
             $this->storedObjects[] = & $vector;
-            
+
             if ($type === Amfphp_Core_Amf_Types_Vector::VECTOR_OBJECT) {
                 $vector->className = $this->readAmf3String();
                 for ($i = 0; $i < $handle; $i++) {
@@ -801,10 +800,10 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
                     $vector->data[] = $this->readAmf3VectorValue($length, $format);
                 }
 
-                
+
             }
 
-            
+
             return $vector;
         } else {
             return $this->storedObjects[$handle];
@@ -814,10 +813,10 @@ class Amfphp_Core_Amf_Deserializer implements Amfphp_Core_Common_IDeserializer {
     /**
      * Read numeric values from the AMF byte stream. Please be aware that unsigned integers are not really supported in PHP, and for this reason
      * unsigned integers are cast to float. {@link http://php.net/manual/en/language.types.integer.php}.
-     * 
+     *
      * @param   integer You can specify 4 for integers or 8 for double precision floating point.
      * @param   string  'ival' for signed integers, 'Ival' for unsigned integers, and "dval" for double precision floating point
-     * 
+     *
      * @return <type>
      */
     protected function readAmf3VectorValue($length, $format) {
